@@ -8,5 +8,7 @@ data class WeatherUiState(
 
     val weather: Weather? = null,
 
-    val error: String? = null
+    val error: String? = null,
+
+    val searchedCity: String = ""
 )

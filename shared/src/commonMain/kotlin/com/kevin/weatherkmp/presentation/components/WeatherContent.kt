@@ -10,6 +10,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.kevin.weatherkmp.domain.model.Weather
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import com.kevin.weatherkmp.presentation.components.ForecastItem
 
 @Composable
 fun WeatherContent(
@@ -102,6 +105,32 @@ fun WeatherContent(
                     title = "Wind",
                     value = "${weather.windSpeed} km/h"
                 )
+            }
+
+            Spacer(
+                modifier = Modifier.height(30.dp)
+            )
+
+            Text(
+                text = "7-Day Forecast",
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold
+            )
+
+            Spacer(
+                modifier = Modifier.height(16.dp)
+            )
+
+            LazyRow(
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+
+                items(weather.forecast) { forecast ->
+
+                    ForecastItem(
+                        forecast = forecast
+                    )
+                }
             }
         }
     }

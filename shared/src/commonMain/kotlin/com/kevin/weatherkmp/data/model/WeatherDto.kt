@@ -9,7 +9,10 @@ data class WeatherDto(
     val location: LocationDto,
 
     @SerialName("current")
-    val current: CurrentWeatherDto
+    val current: CurrentWeatherDto,
+
+    @SerialName("forecast")
+    val forecast: ForecastDto
 )
 
 @Serializable

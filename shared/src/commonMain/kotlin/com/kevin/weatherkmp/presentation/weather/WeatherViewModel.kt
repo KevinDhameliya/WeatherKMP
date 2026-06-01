@@ -2,8 +2,6 @@ package com.kevin.weatherkmp.presentation.weather
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.kevin.weatherkmp.data.remote.api.WeatherApi
-import com.kevin.weatherkmp.data.repository.WeatherRepositoryImpl
 import com.kevin.weatherkmp.domain.usecase.GetWeatherUseCase
 import com.kevin.weatherkmp.presentation.state.WeatherUiState
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -11,13 +9,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class WeatherViewModel : ViewModel() {
-
-    private val useCase = GetWeatherUseCase(
-        WeatherRepositoryImpl(
-            WeatherApi()
-        )
-    )
+class WeatherViewModel(
+    private val getWeatherUseCase: GetWeatherUseCase
+) : ViewModel() {
 
     private val _state = MutableStateFlow(
         WeatherUiState()
@@ -32,24 +26,36 @@ class WeatherViewModel : ViewModel() {
 
         viewModelScope.launch {
 
-            _state.value = WeatherUiState(
-                isLoading = true
+            _state.value = _state.value.copy(
+                isLoading = true,
+                error = null,
+                searchedCity = city
             )
 
             try {
 
-                val result = useCase(city)
+                val result = getWeatherUseCase(city)
 
-                _state.value = WeatherUiState(
+                _state.value = _state.value.copy(
+                    isLoading = false,
                     weather = result
                 )
 
             } catch (e: Exception) {
 
-                _state.value = WeatherUiState(
+                _state.value = _state.value.copy(
+                    isLoading = false,
                     error = e.message
                 )
             }
+        }
+    }
+
+    fun retry() {
+
+        if (_state.value.searchedCity.isNotBlank()) {
+
+            getWeather(_state.value.searchedCity)
         }
     }
 }

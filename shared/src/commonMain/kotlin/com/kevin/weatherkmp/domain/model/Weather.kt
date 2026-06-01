@@ -13,5 +13,7 @@ data class Weather(
 
     val condition: String,
 
-    val iconUrl: String
+    val iconUrl: String,
+
+    val forecast: List<Forecast>
 )

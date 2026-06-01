@@ -14,7 +14,7 @@ class WeatherApi {
 
         return client
             .get(
-                "https://api.weatherapi.com/v1/current.json?key=3261d27c0b21479e8b864128262605&q=$city"
+                "https://api.weatherapi.com/v1/forecast.json?key=3261d27c0b21479e8b864128262605&q=$city&days=7"
             )
             .body()
     }
