@@ -8,9 +8,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import com.kevin.weatherkmp.location.LocationManager
 
 class WeatherViewModel(
-    private val getWeatherUseCase: GetWeatherUseCase
+    private val getWeatherUseCase: GetWeatherUseCase,
+    private val locationManager: LocationManager
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(
@@ -56,6 +58,17 @@ class WeatherViewModel(
         if (_state.value.searchedCity.isNotBlank()) {
 
             getWeather(_state.value.searchedCity)
+        }
+    }
+
+    fun loadCurrentLocationWeather() {
+
+        viewModelScope.launch {
+
+            val city =
+                locationManager.getCurrentCity()
+
+            getWeather(city)
         }
     }
 }

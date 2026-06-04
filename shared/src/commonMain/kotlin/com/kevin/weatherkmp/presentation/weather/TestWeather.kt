@@ -11,6 +11,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.kevin.weatherkmp.presentation.components.ErrorContent
 import com.kevin.weatherkmp.presentation.components.WeatherContent
+import com.kevin.weatherkmp.utils.Constants
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -19,6 +20,10 @@ fun TestWeatherScreen() {
     val viewModel: WeatherViewModel = koinViewModel()
 
     val state by viewModel.state.collectAsStateWithLifecycle()
+
+    LaunchedEffect(Unit) {
+        viewModel.getWeather(Constants.DEFAULT_CITY)
+    }
 
     var city by remember {
         mutableStateOf("")
@@ -32,6 +37,7 @@ fun TestWeatherScreen() {
             modifier = Modifier
                 .fillMaxSize()
                 .statusBarsPadding()
+                .navigationBarsPadding()
                 .verticalScroll(rememberScrollState())
                 .padding(20.dp)
         ) {
@@ -53,6 +59,7 @@ fun TestWeatherScreen() {
             )
 
             Button(
+                enabled = !state.isLoading,
                 onClick = {
 
                     if (city.isNotBlank()) {
@@ -62,7 +69,12 @@ fun TestWeatherScreen() {
                 modifier = Modifier.fillMaxWidth()
             ) {
 
-                Text("Get Weather")
+                Text(
+                    if (state.isLoading)
+                        "Loading..."
+                    else
+                        "Get Weather"
+                )
             }
 
             Spacer(

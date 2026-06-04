@@ -10,5 +10,7 @@ data class WeatherUiState(
 
     val error: String? = null,
 
-    val searchedCity: String = ""
+    val searchedCity: String = "",
+
+    val recentSearches: List<String> = emptyList()
 )
