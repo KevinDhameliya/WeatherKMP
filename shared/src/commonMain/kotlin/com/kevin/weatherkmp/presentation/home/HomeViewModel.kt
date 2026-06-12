@@ -1,26 +1,44 @@
-package com.kevin.weatherkmp.presentation.weather
+package com.kevin.weatherkmp.presentation.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.kevin.weatherkmp.domain.repository.SearchHistoryRepository
 import com.kevin.weatherkmp.domain.usecase.GetWeatherUseCase
-import com.kevin.weatherkmp.presentation.state.WeatherUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import com.kevin.weatherkmp.location.LocationManager
+import kotlinx.coroutines.flow.collect
 
-class WeatherViewModel(
-    private val getWeatherUseCase: GetWeatherUseCase,
-    private val locationManager: LocationManager
+class HomeViewModel(
+
+    private val getWeatherUseCase:
+    GetWeatherUseCase,
+
+    private val searchHistoryRepository:
+    SearchHistoryRepository
+
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(
-        WeatherUiState()
+        HomeUiState()
     )
 
-    val state: StateFlow<WeatherUiState> =
+    val state: StateFlow<HomeUiState> =
         _state.asStateFlow()
+
+    init {
+
+        viewModelScope.launch {
+
+            searchHistoryRepository.cities.collect {
+
+                _state.value = _state.value.copy(
+                    recentSearches = it
+                )
+            }
+        }
+    }
 
     fun getWeather(
         city: String
@@ -38,9 +56,11 @@ class WeatherViewModel(
 
                 val result = getWeatherUseCase(city)
 
+                searchHistoryRepository.saveCity(city)
+
                 _state.value = _state.value.copy(
                     isLoading = false,
-                    weather = result
+                    weather = result,
                 )
 
             } catch (e: Exception) {
@@ -61,14 +81,32 @@ class WeatherViewModel(
         }
     }
 
-    fun loadCurrentLocationWeather() {
+    fun onEvent(
+        event: HomeEvent
+    ) {
 
-        viewModelScope.launch {
+        when (event) {
 
-            val city =
-                locationManager.getCurrentCity()
+            is HomeEvent.SearchCity -> {
 
-            getWeather(city)
+                getWeather(event.city)
+            }
+
+            HomeEvent.Retry -> {
+
+                retry()
+            }
         }
     }
+
+//    fun loadCurrentLocationWeather() {
+//
+//        viewModelScope.launch {
+//
+//            val city =
+//                locationManager.getCurrentCity()
+//
+//            getWeather(city)
+//        }
+//    }
 }

@@ -1,12 +1,10 @@
 package com.kevin.weatherkmp
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
-import com.kevin.weatherkmp.presentation.weather.TestWeatherScreen
+import com.kevin.weatherkmp.presentation.navigation.AppNavigation
 
 @Composable
-@Preview
 fun App() {
 
-    TestWeatherScreen()
+    AppNavigation()
 }

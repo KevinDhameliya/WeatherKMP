@@ -1,4 +1,4 @@
-package com.kevin.weatherkmp.presentation.weather
+package com.kevin.weatherkmp.presentation.home
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -13,11 +13,16 @@ import com.kevin.weatherkmp.presentation.components.ErrorContent
 import com.kevin.weatherkmp.presentation.components.WeatherContent
 import com.kevin.weatherkmp.utils.Constants
 import org.koin.compose.viewmodel.koinViewModel
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.layout.Arrangement
+import com.kevin.weatherkmp.presentation.components.SearchChip
+import com.kevin.weatherkmp.presentation.home.HomeViewModel
 
 @Composable
-fun TestWeatherScreen() {
+fun HomeScreen() {
 
-    val viewModel: WeatherViewModel = koinViewModel()
+    val viewModel: HomeViewModel = koinViewModel()
 
     val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -63,7 +68,9 @@ fun TestWeatherScreen() {
                 onClick = {
 
                     if (city.isNotBlank()) {
-                        viewModel.getWeather(city)
+                        viewModel.onEvent(
+                            HomeEvent.SearchCity(city)
+                        )
                     }
                 },
                 modifier = Modifier.fillMaxWidth()
@@ -78,8 +85,41 @@ fun TestWeatherScreen() {
             }
 
             Spacer(
-                modifier = Modifier.height(30.dp)
+                modifier = Modifier.height(20.dp)
             )
+
+            if (state.recentSearches.isNotEmpty()) {
+
+                Text(
+                    text = "Recent Searches",
+                    style = MaterialTheme.typography.titleMedium
+                )
+
+                Spacer(
+                    modifier = Modifier.height(12.dp)
+                )
+
+                LazyRow(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+
+                    items(state.recentSearches) { city ->
+
+                        SearchChip(
+                            city = city,
+                            onClick = {
+                                viewModel.onEvent(
+                                    HomeEvent.SearchCity(city)
+                                )
+                            }
+                        )
+                    }
+                }
+
+                Spacer(
+                    modifier = Modifier.height(30.dp)
+                )
+            }
 
             when {
 
@@ -88,7 +128,9 @@ fun TestWeatherScreen() {
                     ErrorContent(
                         message = state.error!!,
                         onRetry = {
-                            viewModel.retry()
+                            viewModel.onEvent(
+                                HomeEvent.Retry
+                            )
                         }
                     )
                 }

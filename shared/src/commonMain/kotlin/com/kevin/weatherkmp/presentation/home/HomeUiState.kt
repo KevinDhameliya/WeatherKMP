@@ -1,8 +1,8 @@
-package com.kevin.weatherkmp.presentation.state
+package com.kevin.weatherkmp.presentation.home
 
 import com.kevin.weatherkmp.domain.model.Weather
 
-data class WeatherUiState(
+data class HomeUiState(
 
     val isLoading: Boolean = false,
 
