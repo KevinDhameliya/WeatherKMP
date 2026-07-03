@@ -51,6 +51,10 @@ kotlin {
         androidMain.dependencies {
             implementation(libs.compose.uiToolingPreview)
             implementation(libs.ktor.client.okhttp)
+            implementation(libs.multiplatform.settings.no.arg)
+            implementation(libs.play.services.location)
+            implementation(libs.androidx.core.ktx)
+            implementation(libs.koin.android)
         }
         commonMain.dependencies {
             implementation(libs.compose.runtime)
@@ -80,6 +84,7 @@ kotlin {
             implementation(libs.koin.compose.viewmodel)
             implementation(libs.navigation.compose)
             implementation(libs.material.icons.extended)
+            implementation(libs.multiplatform.settings)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
@@ -89,9 +94,11 @@ kotlin {
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
+            implementation(libs.multiplatform.settings.no.arg)
         }
         jvmMain.dependencies {
             implementation(libs.ktor.client.java)
+            implementation(libs.multiplatform.settings.no.arg)
         }
     }
 }

@@ -5,9 +5,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.kevin.weatherkmp.presentation.components.HistoryItem
@@ -32,13 +34,28 @@ fun SearchHistoryScreen() {
 
     ) {
 
-        Text(
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
 
-            text = "Search History",
+            Text(
 
-            style = MaterialTheme.typography.headlineMedium
+                text = "Search History",
 
-        )
+                style = MaterialTheme.typography.headlineMedium
+
+            )
+
+            if (cities.isNotEmpty()) {
+                TextButton(
+                    onClick = viewModel::clearAll
+                ) {
+                    Text("Clear All")
+                }
+            }
+        }
 
         Spacer(
             modifier = Modifier.height(16.dp)
@@ -46,14 +63,21 @@ fun SearchHistoryScreen() {
 
         LazyColumn {
 
-            items(cities) {
+            items(
+                items = cities,
+                key = { it }
+            ) { city ->
 
                 HistoryItem(
 
-                    city = it,
+                    city = city,
 
                     onClick = {
 
+                    },
+
+                    onDelete = {
+                        viewModel.deleteCity(city)
                     }
 
                 )

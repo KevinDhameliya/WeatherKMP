@@ -56,11 +56,28 @@ fun HomeScreen() {
                 label = {
                     Text("Enter City")
                 },
-                singleLine = true
+                singleLine = true,
+                enabled = !state.isLoading
             )
 
             Spacer(
-                modifier = Modifier.height(16.dp)
+                modifier = Modifier.height(12.dp)
+            )
+
+            OutlinedButton(
+                enabled = !state.isLoading,
+                onClick = {
+                    viewModel.onEvent(
+                        HomeEvent.LoadCurrentLocation
+                    )
+                },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Use Current Location")
+            }
+
+            Spacer(
+                modifier = Modifier.height(12.dp)
             )
 
             Button(
@@ -108,9 +125,11 @@ fun HomeScreen() {
                         SearchChip(
                             city = city,
                             onClick = {
-                                viewModel.onEvent(
-                                    HomeEvent.SearchCity(city)
-                                )
+                                if (!state.isLoading) {
+                                    viewModel.onEvent(
+                                        HomeEvent.SearchCity(city)
+                                    )
+                                }
                             }
                         )
                     }

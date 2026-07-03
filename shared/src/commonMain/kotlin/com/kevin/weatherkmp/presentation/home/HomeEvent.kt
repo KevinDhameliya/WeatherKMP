@@ -6,5 +6,7 @@ sealed interface HomeEvent {
         val city: String
     ) : HomeEvent
 
+    data object LoadCurrentLocation : HomeEvent
+
     data object Retry : HomeEvent
 }

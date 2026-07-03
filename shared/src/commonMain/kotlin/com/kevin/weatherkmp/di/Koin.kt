@@ -1,9 +1,16 @@
 package com.kevin.weatherkmp.di
 
+import org.koin.core.KoinApplication
 import org.koin.core.context.startKoin
 
-fun initKoin() {
+fun initKoin(
+    config: KoinApplication.() -> Unit = {}
+) {
     startKoin {
-        modules(appModule)
+        config()
+        modules(
+            appModule,
+            platformModule
+        )
     }
 }

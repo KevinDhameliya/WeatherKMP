@@ -8,5 +8,11 @@ interface SearchHistoryRepository {
         city: String
     )
 
+    suspend fun deleteCity(
+        city: String
+    )
+
+    suspend fun clearAll()
+
     val cities: StateFlow<List<String>>
 }
